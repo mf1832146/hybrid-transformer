@@ -132,6 +132,8 @@ def traverse_tree_to_generate_matrix(root_node, max_size, k, max_simple_len):
         node_id = current_node.num
         seq[node_id] = current_node.label
         if current_node.is_simple_name:
+            if len(semantic_ids) > max_simple_len:
+                continue
             semantic_ids.append(node_id)
 
         if node_id == root_id:
