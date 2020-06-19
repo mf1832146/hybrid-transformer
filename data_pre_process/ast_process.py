@@ -77,7 +77,7 @@ def parse_dir(original_data_dir, output_data_dir, max_size=200, max_simple_len=3
         seq = replace_simple_name(seq, tree, max_simple_len=max_simple_len)
 
         print(1)
-        number = int(file.split("/")[-1])  # AST对应存储的文件名
+        number = int(file.split("\/")[-1])  # AST对应存储的文件名
         code_token = tokenize(code)[1:-1]  # 对源代码进行分词，本模型未使用，为了其他基线模型
 
         ast_num = str(number)
