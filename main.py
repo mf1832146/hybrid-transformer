@@ -11,12 +11,12 @@ def parse():
     parser.add_argument('-model', default='hybrid-transformer', help='[hybrid-transformer]')
     parser.add_argument('-num_step', type=int, default=250)
     parser.add_argument('-num_layers', type=int, default=2, help='layer num')
-    parser.add_argument('-model_dim', type=int, default=300)
+    parser.add_argument('-model_dim', type=int, default=384)
     parser.add_argument('-num_heads', type=int, default=6)
-    parser.add_argument('-ffn_dim', type=int, default=512)
+    parser.add_argument('-ffn_dim', type=int, default=1536)
 
     parser.add_argument('-data_dir', default='../data_set')
-    parser.add_argument('-code_max_len', type=int, default=100, help='max length of code')
+    parser.add_argument('-code_max_len', type=int, default=200, help='max length of code')
     parser.add_argument('-comment_max_len', type=int, default=30, help='comment max length')
     parser.add_argument('-relative_pos', type=bool, default=True, help='use relative position')
     parser.add_argument('-k', type=int, default=5, help='relative window size')
@@ -61,3 +61,4 @@ if __name__ == '__main__':
         solver.visualize(load_epoch=args.load_epoch)
     elif args.gold_test:
         solver.gold_test(load_epoch=args.load_epoch)
+
