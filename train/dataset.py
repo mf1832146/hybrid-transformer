@@ -27,7 +27,7 @@ class TreeDataSet(Dataset):
         """
         super(TreeDataSet, self).__init__()
         print('loading data...')
-        self.data_set = load_json(file_name)[:10]
+        self.data_set = load_json(file_name)
         print('loading data finished...')
 
         self.max_ast_size = max_ast_size

@@ -136,8 +136,8 @@ class Solver:
             log_handler=OutputHandler(
                 tag="training", output_transform=lambda loss: {"batchloss": loss}, metric_names="all"
             ),
-            # event_name=Events.ITERATION_COMPLETED(every=log_batch),
-            event_name=Events.ITERATION_COMPLETED(every=1),
+            event_name=Events.ITERATION_COMPLETED(every=log_batch),
+            # event_name=Events.ITERATION_COMPLETED(every=1),
         )
 
         trainer.run(train_loader, max_epochs=self.args.num_step)
