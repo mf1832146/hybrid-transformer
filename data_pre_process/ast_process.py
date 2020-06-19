@@ -76,7 +76,7 @@ def parse_dir(original_data_dir, output_data_dir, max_size=200, max_simple_len=3
         # 将变量名, 方法名, value转化为<SimpleName>_0, <SimpleName>_1, ...
         seq = replace_simple_name(seq, tree, max_simple_len=max_simple_len)
 
-        number = int(file.split("/")[-1])  # AST对应存储的文件名
+        number = int(file.split("\\")[-1])  # AST对应存储的文件名
         code_token = tokenize(code)[1:-1]  # 对源代码进行分词，本模型未使用，为了其他基线模型
 
         ast_num = str(number)
@@ -225,4 +225,4 @@ def isnum(s):
 
 
 if __name__ == '__main__':
-    process(data_dir='../../data', output_data_dir='../../data_set', max_size=200, max_simple_len=30, vocab_size=200)
+    process(data_dir='../data', output_data_dir='../data_set', max_size=200, max_simple_len=30, vocab_size=200)
