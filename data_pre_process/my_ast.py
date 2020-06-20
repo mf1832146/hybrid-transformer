@@ -34,7 +34,7 @@ def parse(path):
 
             data = json.loads(f.readline()[:-1])
             code = data['code']
-            nl = data['nl']
+            nl = data['comment']
         except Exception as e:
             print(e)
             return None, None, None

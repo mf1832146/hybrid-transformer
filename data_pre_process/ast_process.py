@@ -226,4 +226,4 @@ def isnum(s):
 
 
 if __name__ == '__main__':
-    process(data_dir='../data', output_data_dir='../data_set', max_size=200, max_simple_len=30, vocab_size=200)
+    process(data_dir='../../data', output_data_dir='../../data_set')
