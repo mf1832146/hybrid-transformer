@@ -69,7 +69,8 @@ class Solver:
         train_loader = DataLoaderX(dataset=train_data_set,
                                    batch_size=self.args.batch_size,
                                    shuffle=True,
-                                   collate_fn=collate_fn)
+                                   collate_fn=collate_fn,
+                                   num_workers=8)
         valid_loader = DataLoaderX(dataset=valid_data_set,
                                    batch_size=self.args.batch_size,
                                    shuffle=False,
