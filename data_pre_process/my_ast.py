@@ -64,13 +64,16 @@ def get_method_name(root):
 
 
 def traverse_simple_name(root):
-    if root.is_simple_name:
-        li = [root.simple_name]
-    else:
-        li = []
-    for child in root.children:
-        li += traverse_simple_name(child)
-    return li
+    simple_list = []
+    queue = [root]
+    while queue:
+        current_node = queue.pop()
+        if current_node.is_simple_name:
+            simple_list.append(current_node.simple_name)
+        for child in current_node.children:
+            queue.append(child)
+
+    return simple_list
 
 
 def get_bracket(s):

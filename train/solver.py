@@ -1,12 +1,12 @@
 import json
 
 import torch
-from ignite.contrib.handlers import ProgressBar
 from ignite.engine import create_supervised_trainer, create_supervised_evaluator, Events
 from ignite.handlers import ModelCheckpoint, EarlyStopping
 from pytorch_pretrained_bert import BertAdam
 from tqdm import tqdm
 
+from train.my_data_loader import DataLoaderX
 from train.dataset import TreeDataSet, collate_fn
 from torch.utils.data import DataLoader
 
@@ -66,14 +66,14 @@ class Solver:
                                      max_comment_size=self.args.comment_max_len,
                                      use_code=use_relative)
 
-        train_loader = DataLoader(dataset=train_data_set,
-                                  batch_size=self.args.batch_size,
-                                  shuffle=True,
-                                  collate_fn=collate_fn)
-        valid_loader = DataLoader(dataset=valid_data_set,
-                                  batch_size=self.args.batch_size,
-                                  shuffle=False,
-                                  collate_fn=collate_fn)
+        train_loader = DataLoaderX(dataset=train_data_set,
+                                   batch_size=self.args.batch_size,
+                                   shuffle=True,
+                                   collate_fn=collate_fn)
+        valid_loader = DataLoaderX(dataset=valid_data_set,
+                                   batch_size=self.args.batch_size,
+                                   shuffle=False,
+                                   collate_fn=collate_fn)
 
         device = "cpu"
 
@@ -171,10 +171,10 @@ class Solver:
                                     max_comment_size=self.args.comment_max_len,
                                     use_code=use_relative)
 
-        test_loader = DataLoader(dataset=test_data_set,
-                                 batch_size=self.args.batch_size,
-                                 shuffle=False,
-                                 collate_fn=collate_fn)
+        test_loader = DataLoaderX(dataset=test_data_set,
+                                  batch_size=self.args.batch_size,
+                                  shuffle=False,
+                                  collate_fn=collate_fn)
 
         greedy_evaluator = GreedyEvaluate(self.model, self.args.comment_max_len, self.nl2id['<s>'])
 
