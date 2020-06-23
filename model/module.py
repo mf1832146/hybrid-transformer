@@ -186,15 +186,29 @@ class PointerGenerator(nn.Module):
         total_state = torch.cat([context_vector, decoder_output, nl_embed], dim=-1)
 
         p_gen = self.p_gen(self.dropout(total_state))
+
         p_copy = 1 - p_gen
 
         # shape [batch_size, nl_len, max_simple_name_len]
         p_copy_ast = torch.matmul(decoder_attn, nl_convert) + 1e-9
         p_copy_ast = self.log_soft_max(p_copy_ast)
 
+        if is_nan(p_copy_ast):
+            print('p_copy_ast is null')
+        if is_nan(p_vocab):
+            print('p_vocab is null')
+        if is_nan(torch.log(p_gen)):
+            print('torch.log(p_gen) is null')
+        if is_nan(torch.log(p_copy)):
+            print('torch.log(p_copy) is null')
+
         p = torch.cat([p_vocab + torch.log(p_gen), p_copy_ast + torch.log(p_copy)], dim=-1)
 
         return p
+
+
+def is_nan(inputs):
+    return torch.sum(inputs != inputs) != 0
 
 
 class Train(nn.Module):
