@@ -22,7 +22,7 @@ def parse():
     parser.add_argument('-k', type=int, default=5, help='relative window size')
     parser.add_argument('-max_simple_name_len', type=int, default=30, help='max simple name length')
 
-    parser.add_argument('-dropout', type=float, default=0.5)
+    parser.add_argument('-dropout', type=float, default=0.2)
 
     parser.add_argument('-load', action='store_true', help='load pretrained model')
     parser.add_argument('-train', action='store_true')
