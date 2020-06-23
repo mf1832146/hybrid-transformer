@@ -114,6 +114,7 @@ class Solver:
         validation_evaluator.add_event_handler(Events.COMPLETED, early_stop_handler)
 
         @trainer.on(Events.EPOCH_COMPLETED)
+        # @trainer.on(Events.ITERATION_COMPLETED)
         def compute_metrics(engine):
 
             validation_evaluator.run(valid_loader)

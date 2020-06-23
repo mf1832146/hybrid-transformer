@@ -110,6 +110,7 @@ def parse_dir(original_data_dir, output_data_dir, max_size=100, max_simple_len=3
                 nl_tokens.append(x)
 
         nl_counter = Counter(nl_tokens)
+        print(nl_counter['</s>'])
         nl_tokens = sorted(x[0] for x in nl_counter.most_common(vocab_size) if x[1] > min_count)
 
         nl_tokens += ['<SimpleName>_' + str(i) for i in range(max_simple_len)]
@@ -128,7 +129,7 @@ def parse_dir(original_data_dir, output_data_dir, max_size=100, max_simple_len=3
         pickle.dump(nl_vocab, open(output_data_dir + "/nl_i2w.pkl", "wb"))
         pickle.dump(code_vocab, open(output_data_dir + "/code_i2w.pkl", "wb"))
     else:
-        nl_vocab = read_pickle(output_data_dir + "/ast_i2w.pkl")
+        nl_vocab = read_pickle(output_data_dir + "/nl_i2w.pkl")
 
     # 摘要中的词，如果不在词表中，也不在AST节点中，设置为UNK. 如果不在词表中，在simpleName中，替换为simpleName
     for i in range(len(ast_nums)):

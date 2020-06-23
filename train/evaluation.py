@@ -89,7 +89,12 @@ def nltk_sentence_bleu(hypothesis, reference, order=4):
     cc = SmoothingFunction()
     if len(reference) < 4:
         return 0
-    return nltk.translate.bleu([reference], hypothesis, smoothing_function=cc.method4)
+    try:
+        score = nltk.translate.bleu([reference], hypothesis, smoothing_function=cc.method4)
+    except Exception as e:
+        print('reference: ', reference)
+        print('hypothesis: ', hypothesis)
+    return score
 
 
 def single_meteor_score(
@@ -186,5 +191,5 @@ if __name__ == '__main__':
     # reference = 'This is a test Ok'
     # candidate = 'This is a test unk Yes'
     # print(rouge_l_score(candidate, reference))
-    evaluate_on_file('./evaluate_file/')
-    #print(nltk_sentence_bleu(['D', 'A', 'object'], ['Frees', 'the', 'object']))
+    #evaluate_on_file('./evaluate_file/')
+    print(nltk_sentence_bleu([''],[]))
