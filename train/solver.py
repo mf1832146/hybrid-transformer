@@ -84,6 +84,10 @@ class Solver:
             device = "cuda"
             print('use gpu')
 
+        if self.args.load_epoch != '-1':
+            self.load_model(load_epoch=self.args.load_epoch)
+            print('load epoch ', self.args.load_epoch)
+
         model_opt = BertAdam(self.model.parameters(), lr=1e-4)
         criterion = LabelSmoothing(size=self.nl_vocab_size,
                                    padding_idx=0, smoothing=0.1)

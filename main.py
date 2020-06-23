@@ -30,7 +30,7 @@ def parse():
     parser.add_argument('-visual', action='store_true')
     parser.add_argument('-gold_test', action='store_true')
 
-    parser.add_argument('-load_epoch', type=str, default='108')
+    parser.add_argument('-load_epoch', type=str, default='-1')
 
     parser.add_argument('-log_dir', default='train_log/')
 
