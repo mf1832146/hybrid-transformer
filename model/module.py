@@ -146,7 +146,7 @@ class DecoderLayer(nn.Module):
 
 
 class PointerGenerator(nn.Module):
-    def __init__(self, d_model, nl_vocab_size, semantic_begin, max_simple_name_len):
+    def __init__(self, d_model, nl_vocab_size, semantic_begin, max_simple_name_len, dropout):
         super(PointerGenerator, self).__init__()
 
         self.d_model = d_model
@@ -161,6 +161,7 @@ class PointerGenerator(nn.Module):
         )
         self.semantic_begin = semantic_begin
         self.log_soft_max = nn.LogSoftmax(dim=-1)
+        self.dropout = nn.Dropout(dropout)
 
     def forward(self, decoder_output, decoder_attn, memory, nl_embed, nl_convert, semantic_mask):
         """
@@ -184,13 +185,11 @@ class PointerGenerator(nn.Module):
         #  shape [batch_size, nl_len, 3 * d_model]
         total_state = torch.cat([context_vector, decoder_output, nl_embed], dim=-1)
 
-        p_gen = self.p_gen(total_state)
+        p_gen = self.p_gen(self.dropout(total_state))
         p_copy = 1 - p_gen
 
         # shape [batch_size, nl_len, max_simple_name_len]
-        p_copy_ast = torch.matmul(decoder_attn, nl_convert)
-        p_copy_ast = p_copy_ast
-        p_copy_ast = p_copy_ast.masked_fill(p_copy_ast == 0, 1e-9)
+        p_copy_ast = torch.matmul(decoder_attn, nl_convert) + 1e-9
         p_copy_ast = self.log_soft_max(p_copy_ast)
 
         p = torch.cat([p_vocab + torch.log(p_gen), p_copy_ast + torch.log(p_copy)], dim=-1)
@@ -265,7 +264,7 @@ def make_model(code_vocab, nl_vocab, N=2, d_model=300, d_ff=512, k=5, h=6,
                              c(ff), dropout), N),
         Embeddings(d_model, code_vocab),
         nn.Sequential(Embeddings(d_model, nl_vocab), c(position)),
-        PointerGenerator(d_model, nl_vocab, h // num_features * (num_features-1), max_simple_name_len),
+        PointerGenerator(d_model, nl_vocab, h // num_features * (num_features-1), max_simple_name_len, dropout),
         num_heads=h
     )
 

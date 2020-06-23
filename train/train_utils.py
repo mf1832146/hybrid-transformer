@@ -95,6 +95,14 @@ class BLEU4(Metric):
         return self._bleu_scores / self._num_examples
 
 
+def transform(inputs):
+    y_pred, y = inputs
+    vocab_size = y_pred.size(-1)
+    y_pred = y_pred.view(-1, vocab_size)
+    y = y.view(-1)
+    return y_pred, y
+
+
 class Rouge(Metric):
     def __init__(self, id2nl, output_transform=lambda x: x, device=None):
         super(Rouge, self).__init__(output_transform, device=device)

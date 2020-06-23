@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader
 
 from train.evaluation import batch_evaluate
 from model.module import make_model, Train, GreedyEvaluate
-from train.train_utils import LabelSmoothing, BLEU4, MyLoss, Rouge, Meteor
+from train.train_utils import LabelSmoothing, BLEU4, MyLoss, Rouge, Meteor, transform
 from ignite.contrib.handlers.tensorboard_logger import *
 import numpy as np
 import torch.nn.functional as F
@@ -103,7 +103,7 @@ class Solver:
         # metric_valid = {"bleu": BLEU4(self.id2nl), "rouge": Rouge(self.id2nl), "meteor": Meteor(self.id2nl)}
         # metric_valid = {"bleu": BLEU4(self.id2nl)}
         # metric_valid = {"loss": BLEU4(self.id2nl)}
-        metric_valid = {"loss": Loss(F.nll_loss)}
+        metric_valid = {"loss": Loss(F.nll_loss, output_transform=transform)}
 
         """
         train + generator
