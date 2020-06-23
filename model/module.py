@@ -153,14 +153,14 @@ class PointerGenerator(nn.Module):
         self.nl_vocab_size = nl_vocab_size
         self.p_vocab = nn.Sequential(
             nn.Linear(self.d_model, self.nl_vocab_size - max_simple_name_len),
-            nn.LogSoftmax(dim=-1)
+            nn.Softmax(dim=-1)
         )
         self.p_gen = nn.Sequential(
             nn.Linear(3 * self.d_model, 1),
             nn.Sigmoid()
         )
         self.semantic_begin = semantic_begin
-        self.log_soft_max = nn.LogSoftmax(dim=-1)
+        self.soft_max = nn.Softmax(dim=-1)
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, decoder_output, decoder_attn, memory, nl_embed, nl_convert, semantic_mask):
@@ -192,18 +192,11 @@ class PointerGenerator(nn.Module):
         # shape [batch_size, nl_len, max_simple_name_len]
         p_copy_ast = torch.matmul(decoder_attn, nl_convert)
         p_copy_ast = p_copy_ast.masked_fill(p_copy_ast == 0., 1e-9)
-        p_copy_ast = self.log_soft_max(p_copy_ast)
+        p_copy_ast = self.soft_max(p_copy_ast)
 
-        if is_nan(p_copy_ast):
-            print('p_copy_ast is null')
-        if is_nan(p_vocab):
-            print('p_vocab is null')
-        if is_nan(torch.log(p_gen)):
-            print('torch.log(p_gen) is null')
-        if is_nan(torch.log(p_copy)):
-            print('torch.log(p_copy) is null')
-
-        p = torch.cat([p_vocab + torch.log(p_gen), p_copy_ast + torch.log(p_copy)], dim=-1)
+        p = torch.cat([p_vocab * p_gen, p_copy_ast * p_copy], dim=-1)
+        p = p + 1e-10
+        p = torch.log(p)
 
         return p
 
