@@ -90,10 +90,11 @@ def nltk_sentence_bleu(hypothesis, reference, order=4):
     if len(reference) < 4:
         return 0
     try:
-        score = nltk.translate.bleu([reference], hypothesis, smoothing_function=cc.method4)
+        score = nltk.translate.bleu([reference], hypothesis, smoothing_function=cc.method1)
     except Exception as e:
         print('reference: ', reference)
         print('hypothesis: ', hypothesis)
+        print(e)
     return score
 
 
@@ -192,4 +193,4 @@ if __name__ == '__main__':
     # candidate = 'This is a test unk Yes'
     # print(rouge_l_score(candidate, reference))
     #evaluate_on_file('./evaluate_file/')
-    print(nltk_sentence_bleu([''],[]))
+    print(nltk_sentence_bleu(['a'], ['return', 'a', 'time', 'I', 'for', 'right', 'now']))
