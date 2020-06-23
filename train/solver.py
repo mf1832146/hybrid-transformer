@@ -74,7 +74,8 @@ class Solver:
         valid_loader = DataLoaderX(dataset=valid_data_set,
                                    batch_size=self.args.batch_size,
                                    shuffle=False,
-                                   collate_fn=collate_fn)
+                                   collate_fn=collate_fn,
+                                   num_workers=8)
 
         device = "cpu"
 
@@ -118,7 +119,7 @@ class Solver:
         early_stop_handler = EarlyStopping(patience=20, score_function=self.score_function, trainer=trainer)
         validation_evaluator.add_event_handler(Events.COMPLETED, early_stop_handler)
 
-        @trainer.on(Events.EPOCH_COMPLETED)
+        @trainer.on(Events.EPOCH_COMPLETED(every=2))
         # @trainer.on(Events.ITERATION_COMPLETED)
         def compute_metrics(engine):
 
