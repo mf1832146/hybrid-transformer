@@ -102,14 +102,14 @@ class Solver:
 
         # metric_valid = {"bleu": BLEU4(self.id2nl), "rouge": Rouge(self.id2nl), "meteor": Meteor(self.id2nl)}
         # metric_valid = {"bleu": BLEU4(self.id2nl)}
-        # metric_valid = {"loss": BLEU4(self.id2nl)}
-        metric_valid = {"loss": Loss(F.nll_loss, output_transform=transform)}
+        metric_valid = {"bleu": BLEU4(self.id2nl)}
+        # metric_valid = {"loss": Loss(F.nll_loss, output_transform=transform)}
 
         """
         train + generator
         validation + generator
         """
-        validation_evaluator = create_supervised_evaluator(train_model, metric_valid, device)
+        validation_evaluator = create_supervised_evaluator(greedy_evaluator, metric_valid, device)
 
         # save model
         save_handler = ModelCheckpoint('checkpoint/' + self.args.model, n_saved=10,
@@ -124,19 +124,18 @@ class Solver:
         validation_evaluator.add_event_handler(Events.COMPLETED, early_stop_handler)
 
         @trainer.on(Events.EPOCH_COMPLETED)
-        # @trainer.on(Events.ITERATION_COMPLETED)
         def compute_metrics(engine):
+            print('Epoch ' + str(self.epoch + int(self.args.load_epoch)) + ' end')
+            if self.epoch > 90:
+                validation_evaluator.run(valid_loader)
 
-            validation_evaluator.run(valid_loader)
-
-            print('Epoch ' + str(self.epoch) + ' end')
             self.epoch += 1
 
         tb_logger = TensorboardLogger(self.args.log_dir + self.args.model + '/')
 
         tb_logger.attach(
             validation_evaluator,
-            log_handler=OutputHandler(tag="validation", metric_names=["loss"], another_engine=trainer),
+            log_handler=OutputHandler(tag="validation", metric_names=["bleu"], another_engine=trainer),
             event_name=Events.EPOCH_COMPLETED,
         )
 
@@ -157,7 +156,7 @@ class Solver:
 
     @staticmethod
     def score_function(engine):
-        bleu = engine.state.metrics['loss']
+        bleu = engine.state.metrics['bleu']
         return bleu
 
     def load_model(self, load_epoch):
