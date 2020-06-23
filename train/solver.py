@@ -110,7 +110,8 @@ class Solver:
         save_handler = ModelCheckpoint('checkpoint/' + self.args.model, n_saved=10,
                                        filename_prefix='',
                                        create_dir=True,
-                                       global_step_transform=lambda e, _: e.state.epoch)
+                                       global_step_transform=lambda e, _: e.state.epoch + int(self.args.load_epoch) + 1,
+                                       require_empty=False)
         trainer.add_event_handler(Events.EPOCH_COMPLETED(every=2), save_handler, {self.args.model: self.model})
 
         # early stop
