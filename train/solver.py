@@ -123,7 +123,7 @@ class Solver:
         early_stop_handler = EarlyStopping(patience=20, score_function=self.score_function, trainer=trainer)
         validation_evaluator.add_event_handler(Events.COMPLETED, early_stop_handler)
 
-        @trainer.on(Events.EPOCH_COMPLETED(every=2))
+        @trainer.on(Events.EPOCH_COMPLETED)
         # @trainer.on(Events.ITERATION_COMPLETED)
         def compute_metrics(engine):
 
@@ -136,7 +136,7 @@ class Solver:
 
         tb_logger.attach(
             validation_evaluator,
-            log_handler=OutputHandler(tag="validation", metric_names=["bleu"], another_engine=trainer),
+            log_handler=OutputHandler(tag="validation", metric_names=["loss"], another_engine=trainer),
             event_name=Events.EPOCH_COMPLETED,
         )
 
