@@ -190,7 +190,8 @@ class PointerGenerator(nn.Module):
         p_copy = 1 - p_gen
 
         # shape [batch_size, nl_len, max_simple_name_len]
-        p_copy_ast = torch.matmul(decoder_attn, nl_convert) + 1e-9
+        p_copy_ast = torch.matmul(decoder_attn, nl_convert)
+        p_copy_ast = p_copy_ast.masked_fill(p_copy_ast == 0., 1e-9)
         p_copy_ast = self.log_soft_max(p_copy_ast)
 
         if is_nan(p_copy_ast):
