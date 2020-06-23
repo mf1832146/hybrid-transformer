@@ -3,6 +3,7 @@ import json
 import torch
 from ignite.engine import create_supervised_trainer, create_supervised_evaluator, Events
 from ignite.handlers import ModelCheckpoint, EarlyStopping
+from ignite.metrics import Loss
 from pytorch_pretrained_bert import BertAdam
 from tqdm import tqdm
 
@@ -15,6 +16,7 @@ from model.module import make_model, Train, GreedyEvaluate
 from train.train_utils import LabelSmoothing, BLEU4, MyLoss, Rouge, Meteor
 from ignite.contrib.handlers.tensorboard_logger import *
 import numpy as np
+import torch.nn.functional as F
 
 
 class Solver:
@@ -99,13 +101,15 @@ class Solver:
         trainer = create_supervised_trainer(train_model, model_opt, criterion, device)
 
         # metric_valid = {"bleu": BLEU4(self.id2nl), "rouge": Rouge(self.id2nl), "meteor": Meteor(self.id2nl)}
-        metric_valid = {"bleu": BLEU4(self.id2nl)}
+        # metric_valid = {"bleu": BLEU4(self.id2nl)}
+        # metric_valid = {"loss": BLEU4(self.id2nl)}
+        metric_valid = {"loss": Loss(F.nll_loss)}
 
         """
         train + generator
-        validation + greedy_decode
+        validation + generator
         """
-        validation_evaluator = create_supervised_evaluator(greedy_evaluator, metric_valid, device)
+        validation_evaluator = create_supervised_evaluator(train_model, metric_valid, device)
 
         # save model
         save_handler = ModelCheckpoint('checkpoint/' + self.args.model, n_saved=10,
@@ -153,7 +157,7 @@ class Solver:
 
     @staticmethod
     def score_function(engine):
-        bleu = engine.state.metrics['bleu']
+        bleu = engine.state.metrics['loss']
         return bleu
 
     def load_model(self, load_epoch):

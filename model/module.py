@@ -2,7 +2,7 @@ import math, copy
 import numpy as np
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+
 from torch.autograd import Variable
 
 from model.attention import MultiHeadAttnRelative, MultiHeadAttn
