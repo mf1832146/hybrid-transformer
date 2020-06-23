@@ -195,7 +195,7 @@ class PointerGenerator(nn.Module):
         p_copy_ast = self.soft_max(p_copy_ast)
 
         p = torch.cat([p_vocab * p_gen, p_copy_ast * p_copy], dim=-1)
-        p = p + 1e-10
+        p = p.clamp(1e-9, 1.)
         p = torch.log(p)
 
         return p
