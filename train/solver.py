@@ -72,12 +72,12 @@ class Solver:
                                    batch_size=self.args.batch_size,
                                    shuffle=True,
                                    collate_fn=collate_fn,
-                                   num_workers=8)
+                                   num_workers=4)
         valid_loader = DataLoaderX(dataset=valid_data_set,
                                    batch_size=self.args.batch_size,
                                    shuffle=False,
                                    collate_fn=collate_fn,
-                                   num_workers=8)
+                                   num_workers=1)
 
         device = "cpu"
 
