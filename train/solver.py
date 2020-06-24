@@ -126,7 +126,7 @@ class Solver:
         @trainer.on(Events.EPOCH_COMPLETED)
         def compute_metrics(engine):
             print('Epoch ' + str(self.epoch + int(self.args.load_epoch)) + ' end')
-            if self.epoch + self.args.load_epoch > 88:
+            if self.epoch + int(self.args.load_epoch) > 88:
                 validation_evaluator.run(valid_loader)
 
             self.epoch += 1
