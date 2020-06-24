@@ -48,7 +48,7 @@ class Solver:
                                 dropout=self.args.dropout)
 
     def train(self):
-        use_relative = True if self.args.model == 'hybrid-transformer' else False
+        use_relative = True if self.args.model == 'hybrid-transformer_1' else False
         train_data_set = TreeDataSet(file_name=self.args.data_dir + '/train.json',
                                      ast_path=self.args.data_dir + '/tree/train/',
                                      ast2id=self.ast2id,
@@ -126,7 +126,7 @@ class Solver:
         @trainer.on(Events.EPOCH_COMPLETED)
         def compute_metrics(engine):
             print('Epoch ' + str(self.epoch + int(self.args.load_epoch)) + ' end')
-            if self.epoch + int(self.args.load_epoch) > 88:
+            if self.epoch + int(self.args.load_epoch) > 30:
                 validation_evaluator.run(valid_loader)
 
             self.epoch += 1
