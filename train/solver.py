@@ -48,7 +48,7 @@ class Solver:
                                 dropout=self.args.dropout)
 
     def train(self):
-        use_relative = True if self.args.model == 'hybrid-transformer_1' else False
+        use_relative = True
         train_data_set = TreeDataSet(file_name=self.args.data_dir + '/train.json',
                                      ast_path=self.args.data_dir + '/tree/train/',
                                      ast2id=self.ast2id,
@@ -72,7 +72,7 @@ class Solver:
                                    batch_size=self.args.batch_size,
                                    shuffle=True,
                                    collate_fn=collate_fn,
-                                   num_workers=4)
+                                   num_workers=2)
         valid_loader = DataLoaderX(dataset=valid_data_set,
                                    batch_size=self.args.batch_size,
                                    shuffle=False,
