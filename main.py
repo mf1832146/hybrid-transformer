@@ -8,7 +8,7 @@ def parse():
     parser = argparse.ArgumentParser(description='tree transformer')
     parser.add_argument('-model_dir', default='train_model', help='output model weight dir')
     parser.add_argument('-batch_size', type=int, default=64)
-    parser.add_argument('-model', default='hybrid-transformer_1', help='[hybrid-transformer]')
+    parser.add_argument('-model', default='hybrid-transformer', help='[hybrid-transformer]')
     parser.add_argument('-num_step', type=int, default=250)
     parser.add_argument('-num_layers', type=int, default=2, help='layer num')
     parser.add_argument('-model_dim', type=int, default=384)
