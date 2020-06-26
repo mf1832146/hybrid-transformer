@@ -185,7 +185,7 @@ class PointerGenerator(nn.Module):
         #  shape [batch_size, nl_len, 3 * d_model]
         total_state = torch.cat([context_vector, decoder_output, nl_embed], dim=-1)
 
-        p_gen = self.p_gen(self.dropout(total_state))
+        p_gen = self.p_gen(total_state)
 
         p_copy = 1 - p_gen
 
